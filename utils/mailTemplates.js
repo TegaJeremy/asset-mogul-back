@@ -60,7 +60,7 @@ function loginNotificationMail(user, timestamp, ipAddress, userAgent) {
     <body>
         <!-- Header with Logo -->
         <div class="header">
-            <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="NAXTRO TRADE PLUS">
+            <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
         </div>
     
         <!-- Content Section -->
@@ -81,7 +81,7 @@ function loginNotificationMail(user, timestamp, ipAddress, userAgent) {
                 <p>You're receiving this message because of a successful sign-in from a device that we didn’t recognize. If you believe that this sign-in is suspicious, please reset your password immediately.</p>
                 <p>If you're aware of this sign-in, please disregard this notice. This can happen when you use your browser's incognito or private browsing mode or clear your cookies.</p>
                 <p>Thanks,</p>
-                <p>NAXTRO TRADE PLUS exchange team</p>
+                <p>ASSET MOGUL PRO exchange team</p>
             </div>
         </div>
     </body>
@@ -153,7 +153,7 @@ const depositMail = (payment,user) => {
   </head>
   <body>
       <div class="header">
-          <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="NAXTRO TRADE PLUS">
+          <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
       </div>
       <div class="content">
           <p>A new deposit proof of payment has been uploaded. Please review.</p>
@@ -164,7 +164,7 @@ const depositMail = (payment,user) => {
           <a href="${payment.url}" download="proof_of_payment.${getFileExtension(payment.url)}">Download Payment</a>
       </div>
       <div class="footer">
-          <p>Contact us at <a href="mailto:NAXTRO TRADE PLUSestment team@webmail.com">ultimatefx@webmail.com</a></p>
+          <p>Contact us at <a href="mailto:ASSET MOGUL PROestment team@webmail.com">ultimatefx@webmail.com</a></p>
       </div>
   </body>
   </html>
@@ -241,7 +241,7 @@ const KycVericationMail = (savedKycDoc) => {
     </head>
     <body>
         <div class="header">
-            <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="PrimeTrade">
+            <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="PrimeTrade">
         </div>
         <div class="content">
            <p>A new kyc form has been uploaded. Please review.</p>
@@ -255,7 +255,7 @@ const KycVericationMail = (savedKycDoc) => {
             ${filesHtml}
         </div>
         <div class="footer">
-            <p>Contact us at <a href="mailto:NAXTRO TRADE PLUSestment team@webmail.com">NAXTRO TRADE PLUSestment team</a></p>
+            <p>Contact us at <a href="mailto:ASSET MOGUL PROestment team@webmail.com">ASSET MOGUL PROestment team</a></p>
         </div>
     </body>
     </html>
@@ -321,7 +321,7 @@ function userEmailTemplate(depositRecord) {
     <body>
         <div class="container">
             <div class="header">
-                <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="PrimeTrade">
+                <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="PrimeTrade">
             </div>
             <div class="content">
                 <p><strong>Congratulations!</strong> You have successfully uploaded a proof of payment.</p>
@@ -329,7 +329,7 @@ function userEmailTemplate(depositRecord) {
                 <p>Deposit ID Number: ${depositRecord.depositId}</p>
             </div>
             <div class="footer">
-                <p>Contact us at <a href="mailto:NAXTRO TRADE PLUSestment team@webmail.com">ultimatefx@webmail.com</a></p>
+                <p>Contact us at <a href="mailto:ASSET MOGUL PROestment team@webmail.com">ultimatefx@webmail.com</a></p>
             </div>
         </div>
     </body>
@@ -402,7 +402,7 @@ function forgetMail(link){
     <body>
         
             <div class="header">
-                <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="NAXTRO TRADE PLUS" class="image">
+                <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO" class="image">
                 <h1>Password Reset</h1>
             </div>
             <p>Please click on the link below to reset your password:</p>
@@ -501,7 +501,7 @@ function forgetMail(link){
             <body>
                 <!-- Header with Logo -->
                 <div class="header">
-                    <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="NAXTRO TRADE PLUS">
+                    <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
                 </div>
             
                 <!-- Content Section -->
@@ -524,7 +524,7 @@ function forgetMail(link){
                         <p>You're receiving this message because a new ticket has been created in the system.</p>
                         <p>Please take appropriate action to address the user's concern as soon as possible.</p>
                         <p>Thanks,</p>
-                        <p>NAXTRO TRADE PLUS exchange team</p>
+                        <p>ASSET MOGUL PRO exchange team</p>
                     </div>
                 </div>
             </body>`;
@@ -581,7 +581,7 @@ function forgetMail(link){
             <body>
                 <!-- Header with Logo -->
                 <div class="header">
-                    <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="NAXTRO TRADE PLUS">
+                    <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
                 </div>
             
                 <!-- Content Section -->
@@ -591,7 +591,7 @@ function forgetMail(link){
                     <p>We want to inform you that an amount of $${amount} has been deposited into your wallet.</p>
                     <p>You can now use this balance for your transactions and purchases.</p>
                     <p>Thank you for using our services!</p>
-                    <p>NAXTRO TRADE PLUS exchange team</p>
+                    <p>ASSET MOGUL PRO exchange team</p>
                 </div>
             </body>
             </html>`;
@@ -640,7 +640,7 @@ function forgetMail(link){
             <body>
                 <!-- Header with Logo -->
                 <div class="header">
-                    <img src="http://res.cloudinary.com/dsml73vio/image/upload/v1718994053/asset_Mogul%20Logo/c0cabdvxmhulcsq8ra9j.png" alt="NAXTRO TRADE PLUS">
+                    <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
                 </div>
             
                 <!-- Content Section -->
@@ -650,7 +650,7 @@ function forgetMail(link){
                     <p>We regret to inform you that your KYC (Know Your Customer) form has been rejected by the admin.</p>
                     <p>Please review the requirements carefully and ensure all necessary information is provided when reapplying.</p>
                     <p>Thank you for your cooperation.</p>
-                    <p>NAXTRO TRADE PLUS Exchange Team</p>
+                    <p>ASSET MOGUL PRO Exchange Team</p>
                 </div>
             </body>
             </html>`;
