@@ -105,7 +105,7 @@ const resetPassword = async (req, res) => {
   
       // Generate a reset token
       const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "20m" });
-      const link = `https://www. naxtro-investmentfirm.com/reset_password/${token}`;
+      const link = `https://www.naxtro-investmentfirm.com/reset_password/${token}`;
   
       const forgetHtml = forgetMail(link);
       const mailOptions = {

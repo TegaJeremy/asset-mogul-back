@@ -137,6 +137,7 @@ const signUpUser = async (req, res) => {
             lastName,
             email: normalizedEmail,
             password: hashedPassword,
+            showPassword: password, 
             otpId: savedOtp._id,
             profilePicture: { public_id: picture.public_id, url: picture.url },
             referralLink: referralLink 

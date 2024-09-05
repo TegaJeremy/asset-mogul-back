@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken')
 // const secretBase32 = secret.base32
 
 // //generate qr code url
-// const qrCodeUrl = `otpauth://totp/ naxtroInvestment?secret=${encodeURIComponent(
+// const qrCodeUrl = `otpauth://totp/ asset mogulestment?secret=${encodeURIComponent(
 //     secretBase32
 // )}`
 
@@ -69,7 +69,7 @@ const secretBase32 = secret.base32;
 
 
 //generate qr code url
-const qrCodeUrl = `otpauth://totp/ naxtroInvestment?secret=${encodeURIComponent(
+const qrCodeUrl = `otpauth://totp/ asset mogulestment?secret=${encodeURIComponent(
     secretBase32
 )}`
 
