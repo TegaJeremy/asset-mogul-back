@@ -164,7 +164,7 @@ const depositMail = (payment,user) => {
           <a href="${payment.url}" download="proof_of_payment.${getFileExtension(payment.url)}">Download Payment</a>
       </div>
       <div class="footer">
-          <p>Contact us at <a href="mailto:ASSET MOGUL PROestment team@webmail.com">ultimatefx@webmail.com</a></p>
+          <p>Contact us at <a href="mailto:assetmogul pro support team">assetmogul.com</a></p>
       </div>
   </body>
   </html>
@@ -255,7 +255,7 @@ const KycVericationMail = (savedKycDoc) => {
             ${filesHtml}
         </div>
         <div class="footer">
-            <p>Contact us at <a href="mailto:ASSET MOGUL PROestment team@webmail.com">ASSET MOGUL PROestment team</a></p>
+            <p>Contact us at <a href="mailto:assetmogul pro support team">assetmogul pro  team</a></p>
         </div>
     </body>
     </html>
@@ -329,7 +329,7 @@ function userEmailTemplate(depositRecord) {
                 <p>Deposit ID Number: ${depositRecord.depositId}</p>
             </div>
             <div class="footer">
-                <p>Contact us at <a href="mailto:ASSET MOGUL PROestment team@webmail.com">ultimatefx@webmail.com</a></p>
+                <p>Contact us at <a href="mailto:assetmogul pro support team">assetmogul.com</a></p>
             </div>
         </div>
     </body>

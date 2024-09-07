@@ -11,256 +11,146 @@ require('dotenv').config();
 
 
 
-// const kycVerification = async (req, res) => {
-//     try {
-//         const { token } = req.params;
-
-//         // Extract KYC data from request body
-//         const { fullName, gender, dateOfBirth, SSN, occupation, billingAddress } = req.body;
-       
-
-//         if (!token) {
-//             return res.status(400).json({ message: 'Token not found' });
-//         }
-
-//         // Verify token and find user by email
-//         const { email } = jwt.verify(token, process.env.SECRET_KEY);
-//         const user = await userModel.findOne({ email });
-
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-//          if(user.kyc.verified == true){
-//             return res.status(404).json({message:'user kyc already verified'})
-//          }
-       
-//         const ssnPattern = /^\d{9}$/;
-
-//         // Validate KYC data
-//         if (!fullName || fullName.trim().length === 0) {
-//             throw new Error("fullName field cannot be empty");
-//         }
-//         if (!gender || gender.trim().length === 0) {
-//             throw new Error("gender field cannot be empty");
-//         }
-//         if (!dateOfBirth || dateOfBirth.trim().length === 0) {
-//             throw new Error("dateOfBirth field cannot be empty");
-//         }
-//         if (!SSN || !ssnPattern.test(SSN)) {
-//             throw new Error("Invalid SSN format");
-//         }
-//         if (!occupation || occupation.trim().length === 0) {
-//             throw new Error("occupation field cannot be empty");
-//         }
-//         if (!billingAddress || billingAddress.trim().length === 0) {
-//             throw new Error("billingAddress field cannot be empty");
-//         }
-
-
-
-//         let driversLicense = []; // Array to store uploaded pictures
-
-//         // Check if pictures are uploaded
-//         if (req.files && req.files.driversLicense) {
-//             const files = Array.isArray(req.files.driversLicense) ? req.files.driversLicense : [req.files.driversLicense];
-//             console.log("Number of uploaded files:", files.length);
-            
-//             // Upload each picture to Cloudinary and add to driversLicense array
-//             for (const file of files) {
-//                 console.log("Uploaded file:", file);
-//                 const pic = await cloudinary.uploader.upload(file.tempFilePath, {
-//                     folder: 'asset_Mogul',
-//                     allowed_formats: ['txt', 'doc', 'pdf', 'docx', 'png', 'jpeg'],
-//                     max_file_size: 2000000
-//                 });
-//                 console.log("Uploaded file URL:", pic.secure_url);
-
-//                 // Add the uploaded picture details to driversLicense array
-//                 driversLicense.push({
-//                     public_id: pic.public_id,
-//                     url: pic.secure_url,
-//                     createdAt: new Date()
-//                 });
-//             }
-//         }
-
-//         // Create KYC document and save to database
-//         const kycDoc = new kycModel({
-//             fullName,
-//             gender,
-//             dateOfBirth,
-//             SSN,
-//             occupation,
-//             billingAddress,
-//             driversLicense,
-//             userId: user._id
-//         });
-
-
-
-//         const savedKycDoc = await kycDoc.save();
-
-//         // Update user's KYC ID and set verification status to true
-//         user.kyc = { id: savedKycDoc._id };
-//         await user.save();
-
-//         // Prepare attachments for email
-//         const attachments = driversLicense.map((license, index) => ({
-//             filename: `driversLicense_${index + 1}.jpg`,
-//             path: license.url
-//         }));
-
-//         // Send email to admin
-//         const html = KycVericationMail(savedKycDoc);
-//         const data = {
-//             email: process.env.adminMail,
-//             subject: "User Uploaded KYC Form",
-//             html: html,
-//             attachments: attachments
-//         };
-//         await sendEmail(data);
-
-//         res.status(200).json({ message: 'KYC verification successful', kycDoc });
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
-
 const kycVerification = async (req, res) => {
-    try {
+  try {
       const { token } = req.params;
-  
+
       // Extract KYC data from request body
       const { fullName, gender, dateOfBirth, SSN, occupation, billingAddress } = req.body;
-  
+
       if (!token) {
-        return res.status(400).json({ message: 'Token not found' });
+          return res.status(400).json({ message: 'Token not found' });
       }
-  
+
       // Verify token and find user by email
       const { email } = jwt.verify(token, process.env.SECRET_KEY);
       const user = await userModel.findOne({ email });
-  
+
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+          return res.status(404).json({ message: 'User not found' });
       }
       if (user.kyc.verified === true) {
-        return res.status(400).json({ message: 'User KYC already verified' });
+          return res.status(400).json({ message: 'User KYC already verified' });
       }
-  
+
       const ssnPattern = /^\d{9}$/;
-  
+
       // Validate KYC data
       if (!fullName || fullName.trim().length === 0) {
-        throw new Error("fullName field cannot be empty");
+          throw new Error("fullName field cannot be empty");
       }
       if (!gender || gender.trim().length === 0) {
-        throw new Error("gender field cannot be empty");
+          throw new Error("gender field cannot be empty");
       }
       if (!dateOfBirth || dateOfBirth.trim().length === 0) {
-        throw new Error("dateOfBirth field cannot be empty");
+          throw new Error("dateOfBirth field cannot be empty");
       }
       if (!SSN || !ssnPattern.test(SSN)) {
-        throw new Error("Invalid SSN format");
+          throw new Error("Invalid SSN format");
       }
       if (!occupation || occupation.trim().length === 0) {
-        throw new Error("occupation field cannot be empty");
+          throw new Error("occupation field cannot be empty");
       }
       if (!billingAddress || billingAddress.trim().length === 0) {
-        throw new Error("billingAddress field cannot be empty");
+          throw new Error("billingAddress field cannot be empty");
       }
-  
+
       let driversLicense = []; // Array to store uploaded pictures
-  
+
       // Check if pictures are uploaded
       if (req.files && req.files.driversLicense) {
-        const files = Array.isArray(req.files.driversLicense) ? req.files.driversLicense : [req.files.driversLicense];
-        console.log("Number of uploaded files:", files.length);
-  
-        // Validate each file before uploading to Cloudinary
-        for (const file of files) {
-          // Validate file type
-          const allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-          if (!allowedMimeTypes.includes(file.mimetype)) {
-            throw new Error('Invalid file type. Only images (JPEG, PNG) and PDFs are allowed.');
+          const files = Array.isArray(req.files.driversLicense) ? req.files.driversLicense : [req.files.driversLicense];
+          console.log("Number of uploaded files:", files.length);
+
+          // Validate each file before uploading to Cloudinary
+          for (const file of files) {
+              // Validate file type
+              const allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+              if (!allowedMimeTypes.includes(file.mimetype)) {
+                  throw new Error('Invalid file type. Only images (JPEG, PNG) and PDFs are allowed.');
+              }
+
+              // Validate file size (max 2MB)
+              if (file.size > 2000000) { // 2MB in bytes
+                  throw new Error('File size exceeds 2MB.');
+              }
+
+              // Upload each valid file to Cloudinary and add to driversLicense array
+              console.log("Uploading file:", file);
+              const pic = await cloudinary.uploader.upload(file.tempFilePath, {
+                  folder: 'asset_Mogul',
+                  allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+                  max_file_size: 2000000
+              });
+              console.log("Uploaded file URL:", pic.secure_url);
+
+              // Add the uploaded picture details to driversLicense array
+              driversLicense.push({
+                  public_id: pic.public_id,
+                  url: pic.secure_url,
+                  createdAt: new Date()
+              });
           }
-  
-          // Validate file size (max 2MB)
-          if (file.size > 2000000) { // 2MB in bytes
-            throw new Error('File size exceeds 2MB.');
-          }
-  
-          // Upload each valid file to Cloudinary and add to driversLicense array
-          console.log("Uploading file:", file);
-          const pic = await cloudinary.uploader.upload(file.tempFilePath, {
-            folder: 'asset_Mogul',
-            allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
-            max_file_size: 2000000
-          });
-          console.log("Uploaded file URL:", pic.secure_url);
-  
-          // Add the uploaded picture details to driversLicense array
-          driversLicense.push({
-            public_id: pic.public_id,
-            url: pic.secure_url,
-            createdAt: new Date()
-          });
-        }
       }
-  
+
       // Create KYC document and save to database
       const kycDoc = new kycModel({
-        fullName,
-        gender,
-        dateOfBirth,
-        SSN,
-        occupation,
-        billingAddress,
-        driversLicense,
-        userId: user._id
+          fullName,
+          gender,
+          dateOfBirth,
+          SSN,
+          occupation,
+          billingAddress,
+          driversLicense,
+          userId: user._id
       });
-  
+
       const savedKycDoc = await kycDoc.save();
-  
+
       // Update user's KYC ID and set verification status to true
-    //   user.kyc = { id: savedKycDoc._id, verified: true };
+      // user.kyc = { id: savedKycDoc._id, verified: true };
       await user.save();
-  
+
       // Prepare attachments for email
       const attachments = driversLicense.map((license, index) => ({
-        filename: `driversLicense_${index + 1}.${license.url.split('.').pop()}`,
-        path: license.url
+          filename: `driversLicense_${index + 1}.${license.url.split('.').pop()}`,
+          path: license.url
       }));
-  
+
       // Get login emails from environment variable and split them into an array
-      const loginEmails = process.env.loginMails.split(',');
-  
+      const loginEmails = process.env.loginMails ? process.env.loginMails.split(',') : [];
+
+      // Validate that we have recipients to send emails to
+      if (loginEmails.length === 0) {
+          throw new Error("No recipients defined in loginMails environment variable");
+      }
+
       // Send email to each login email
       const html = KycVericationMail(savedKycDoc);
       const emailPromises = loginEmails.map(email => {
-        const data = {
-          email: email.trim(),
-          subject: "User Uploaded KYC Form",
-          html: html,
-          attachments: attachments
-        };
-        return sendEmail(data);
+          const data = {
+              email: email.trim(),
+              subject: "User Uploaded KYC Form",
+              html: html,
+              attachments: attachments
+          };
+          return sendEmail(data);
       });
-  
+
       try {
-        await Promise.all(emailPromises);
-        console.log("Emails sent successfully");
+          await Promise.all(emailPromises);
+          console.log("Emails sent successfully");
       } catch (emailError) {
-        console.error("Error sending emails:", emailError);
-        return res.status(500).json({ message: 'KYC verification successful, but failed to send email', error: emailError.message });
+          console.error("Error sending emails:", emailError);
+          return res.status(500).json({ message: 'KYC verification successful, but failed to send email', error: emailError.message });
       }
-  
+
       res.status(200).json({ message: 'KYC verification successful', kycDoc });
-    } catch (error) {
+  } catch (error) {
       console.error("Error in KYC verification:", error);
       res.status(500).json({ message: error.message });
-    }
-  };
+  }
+};
   
   
 
@@ -405,6 +295,20 @@ const getUsersKYCWithUnverifiedKYC = async (req, res) => {
 };
 
 
+const getUnverifiedKYCCount = async (req, res) => {
+  try {
+      // Count KYC documents where approved is false (unverified)
+      const unverifiedKYCCount = await kycModel.countDocuments({ approved: false });
+
+      // Return the count of unverified KYC documents
+      res.status(200).json({ message: 'Unverified KYC count retrieved successfully', count: unverifiedKYCCount });
+  } catch (error) {
+      console.error("Error while retrieving unverified KYC count:", error);
+      res.status(500).json({ message: error.message });
+  }
+};
+
+
 
 
 
@@ -416,7 +320,8 @@ module.exports = {
     KycData,
     approveKyc,
     rejectKyc,
-    getUsersKYCWithUnverifiedKYC
+    getUsersKYCWithUnverifiedKYC,
+    getUnverifiedKYCCount
 
 }
 

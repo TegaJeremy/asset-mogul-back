@@ -132,6 +132,29 @@ const getTotalDeposit = async (req,res) => {
 };
 
 
+const getTotalDepositsForAllUsr = async (req, res) => {
+    try {
+        // Use the aggregate method to sum all deposit amounts
+        const totalDeposits = await depositModel.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: "$amount" }
+                }
+            }
+        ]);
+
+        // If no deposits are found, return a total of 0
+        const totalAmount = totalDeposits.length > 0 ? totalDeposits[0].totalAmount : 0;
+
+        res.status(200).json({ message: 'Total deposits calculated successfully', totalAmount });
+    } catch (error) {
+        console.error('Error while calculating total deposits:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
 
 
 
@@ -142,5 +165,6 @@ const getTotalDeposit = async (req,res) => {
 module.exports = {
     deposit,
     depositHistory,
-    getTotalDeposit
+    getTotalDeposit,
+    getTotalDepositsForAllUsr
 }

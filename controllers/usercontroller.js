@@ -725,6 +725,26 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+
+const getAllUserCount = async (req, res) => {
+    try {
+        // Get the count of all users
+        const userCount = await userModel.countDocuments();
+
+        // Check if users exist
+        if (userCount === 0) {
+            return res.status(404).json({ message: 'No users found' });
+        }
+
+        // Return the number of users
+        res.status(200).json({ totalUsers: userCount });
+    } catch (error) {
+        // Handle errors
+        console.error('Error while fetching user count:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
  
 
 module.exports={
@@ -744,9 +764,12 @@ module.exports={
     getuserIntrestWallet,
     getAllUsers,
     getUserTotalBalance,
-    welcome
+    welcome,
+    getAllUserCount
     
 }
+
+
 
 
 
