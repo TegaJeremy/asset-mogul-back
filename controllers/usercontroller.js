@@ -143,7 +143,7 @@ const signUpUser = async (req, res) => {
             referralLink: referralLink 
         });
 
-        user.accountBalance = 1000;
+        user.accountBalance = 0;
         user.earnings = 0;
 
         await user.save();
@@ -479,7 +479,7 @@ const assignMoneyToUser = async (req, res) => {
          user.statusBar = newStatusBar;
 
         await user.save();
-        
+
 
 
 
