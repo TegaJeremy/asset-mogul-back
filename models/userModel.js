@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     intrestWallet: { type: Number, default: 0 },
     referalWallet: { type: Number, default: 0 },
     referralCount: { type: Number, default: 0 },
+    statusBar: { type: Number, default: 0 },
     isAdmin:{type:Boolean, default:false},
     isVerified:{type: Boolean, default:false},
     deactivate:{type: Boolean, default:false},

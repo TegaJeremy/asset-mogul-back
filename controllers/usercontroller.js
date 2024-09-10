@@ -745,6 +745,23 @@ const getAllUserCount = async (req, res) => {
     }
 };
 
+const getUserStatusBar = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find the user by userId
+        const user = await userModel.findOne({ _id: userId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Return the statusBar value
+        res.status(200).json({ statusBar: user.statusBar });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
  
 
 module.exports={
@@ -765,7 +782,8 @@ module.exports={
     getAllUsers,
     getUserTotalBalance,
     welcome,
-    getAllUserCount
+    getAllUserCount,
+    getUserStatusBar
     
 }
 

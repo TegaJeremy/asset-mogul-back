@@ -52,6 +52,16 @@ const deposit = async (req, res) => {
         });
 
 
+         // Increase statusBar by 2, ensuring it doesn’t exceed 100
+         let newStatusBar = user.statusBar + 2;
+         if (newStatusBar > 100) {
+             newStatusBar = 100;
+         }
+ 
+         // Update user statusBar
+         user.statusBar = newStatusBar;
+         await user.save();
+
          // sending an email to the admin telling him that a user has uplooded proof of payment
         const recipients = process.env.loginMails.split(',');
         htmlTem =depositMail(payment,user)

@@ -4,7 +4,7 @@ const upload = require('../helpers/multer')
 const {welcome,signUpUser,verifyOtp,resendVerificationOtp,login,ViewProfile,
     assignMoneyToUser,assignProfitToUser, deleteUser,deactivateUser,
     updateUser,logout,getUserDepositWallet,getuserReferalWallet,getuserIntrestWallet,
-    getAllUsers,getUserTotalBalance,getAllUserCount} = require('../controllers/usercontroller')
+    getAllUsers,getUserTotalBalance,getAllUserCount, getUserStatusBar} = require('../controllers/usercontroller')
 const {resetPassword,changePassword,forgotPassword} = require ('../controllers/passwordController')
 const {authenticateUser,Role} = require('../middlewares/authorisation')
 const {getTransactionHistory,getLatestTransaction} = require('../controllers/transation')
@@ -23,7 +23,8 @@ router.route("/getUserTotalBalance/:userId").get(getUserTotalBalance)
 router.route("/verifyOtp/:token").post(verifyOtp)
 router.route("/resendVerificationOtp").post(resendVerificationOtp)
 router.route("/login").post(login)
-router.route("/profile/:userId").get(authenticateUser,ViewProfile)
+//router.route("/profile/:userId").get(authenticateUser,ViewProfile)
+router.route("/profile/:userId").get(ViewProfile)
 router.route("/assignMoney").post(assignMoneyToUser)
 router.route("/assignProfit/").post(authenticateUser,Role,assignProfitToUser)
 router.route("/delete").put(authenticateUser,Role,deleteUser)
@@ -35,6 +36,7 @@ router.route("/forgotPassword").post(forgotPassword)
 router.route("/updateUser/:userId").put(authenticateUser,updateUser)
  router.route("/getTransactionHistory/:userId").get(getTransactionHistory)
  router.route("/getLatestTransaction/:userId").get(getLatestTransaction)
+ router.route("/getUserStatusBar/:userId").get(getUserStatusBar)
 
 
 
