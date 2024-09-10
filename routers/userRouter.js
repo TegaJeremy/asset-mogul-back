@@ -11,6 +11,7 @@ const {getTransactionHistory,getLatestTransaction} = require('../controllers/tra
 const checkResendCooldown = require('../controllers/verifyOptions')
 
 
+
 router.route('/').get(welcome); 
 router.route("/registration").post(signUpUser)
 router.route("/getAllUsers").get(getAllUsers)
@@ -23,8 +24,7 @@ router.route("/getUserTotalBalance/:userId").get(getUserTotalBalance)
 router.route("/verifyOtp/:token").post(verifyOtp)
 router.route("/resendVerificationOtp").post(resendVerificationOtp)
 router.route("/login").post(login)
-//router.route("/profile/:userId").get(authenticateUser,ViewProfile)
-router.route("/profile/:userId").get(ViewProfile)
+router.route("/profile/:userId").get(authenticateUser,ViewProfile)
 router.route("/assignMoney").post(assignMoneyToUser)
 router.route("/assignProfit/").post(authenticateUser,Role,assignProfitToUser)
 router.route("/delete").put(authenticateUser,Role,deleteUser)
@@ -37,6 +37,7 @@ router.route("/updateUser/:userId").put(authenticateUser,updateUser)
  router.route("/getTransactionHistory/:userId").get(getTransactionHistory)
  router.route("/getLatestTransaction/:userId").get(getLatestTransaction)
  router.route("/getUserStatusBar/:userId").get(getUserStatusBar)
+
 
 
 

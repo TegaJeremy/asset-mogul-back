@@ -469,7 +469,25 @@ const assignMoneyToUser = async (req, res) => {
         // Assign money to user
         user.depositWallet += parseFloat(amount);
         user.accountBalance += parseFloat(amount);
+         // Increase statusBar by 2, ensuring it doesn’t exceed 100
+         let newStatusBar = user.statusBar + 2;
+         if (newStatusBar > 100) {
+             newStatusBar = 2;
+         }
+ 
+         // Update user statusBar
+         user.statusBar = newStatusBar;
+
         await user.save();
+        
+
+
+
+    
+        
+
+       
+        
 
         const html = moneyDepositNotificationMail(user, amount);
         const emailData = {
