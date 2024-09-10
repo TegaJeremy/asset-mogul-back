@@ -7,9 +7,11 @@ router.route("/DepositFunds/:userId").post(deposit);
 router.route("/depositHistory/:userId").get(depositHistory);
 router.route("/getTotalDeposit/:userId").get(getTotalDeposit);
 router.route("/getTotalDepositsForAllUsr").get(getTotalDepositsForAllUsr);
-    
+
 
 module.exports = router
+
+
 
 
 

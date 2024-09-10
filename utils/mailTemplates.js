@@ -1,94 +1,137 @@
 function loginNotificationMail(user, timestamp, ipAddress, userAgent) {
     return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>User Login Notification</title>
-        <style>
-            /* Global Styles */
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                text-align: center;
-                background-color: #000000; /* Black background */
-                color: #444444; /* Slightly darker text */
-                font-weight: bold; /* Bold text */
-            }
-    
-            /* Header Styles */
-            .header {
-                background-color: black;
-                padding: 10px 0;
-                border-top-left-radius: 10px; /* Rounded corners */
-                border-top-right-radius: 10px;
-            }
-    
-            .header img {
-                width: 150px; /* Adjust the width of the image as needed */
-                display: block;
-                margin: 0 auto; /* Center the image horizontally */
-            }
-    
-            /* Content Styles */
-            .content {
-                padding: 20px;
-            }
-    
-            .login-details {
-                margin-top: 20px;
-                text-align: left;
-            }
-    
-            .details-row {
-                margin-bottom: 10px;
-            }
-    
-            /* Link Styles */
-            a {
-                color: #007bff; /* Blue color for links */
-                text-decoration: none;
-            }
-    
-            a:hover {
-                text-decoration: underline; /* Underline on hover */
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Header with Logo -->
-        <div class="header">
-            <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
-        </div>
-    
-        <!-- Content Section -->
-        <div class="content">
-            <h1>User Login Notification</h1>
-            <p>We're verifying a recent sign-in for ${user.email}:</p>
-            <p>userName: ${user.userName}:</p>
-            <div class="login-details">
-                <div class="details-row">
-                    <p><strong>Date:</strong> ${timestamp}</p>
-                </div>
-                <div class="details-row">
-                    <p><strong>IP Address:</strong> ${ipAddress}</p>
-                </div>
-                <div class="details-row">
-                    <p><strong>User Agent:</strong> ${userAgent}</p>
-                </div>
-                <p>You're receiving this message because of a successful sign-in from a device that we didn’t recognize. If you believe that this sign-in is suspicious, please reset your password immediately.</p>
-                <p>If you're aware of this sign-in, please disregard this notice. This can happen when you use your browser's incognito or private browsing mode or clear your cookies.</p>
-                <p>Thanks,</p>
-                <p>ASSET MOGUL PRO exchange team</p>
-            </div>
-        </div>
-    </body>
-    </html>
-  `
-    
-};
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>User Login Notification</title>
+          <style>
+              /* Global Styles */
+              body {
+                  font-family: Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+                  background-color: #f5f5f5; /* Light grey background */
+                  color: #333333; /* Dark grey text */
+              }
+  
+              /* Header Styles */
+              .header {
+                  background-color: #222222; /* Dark grey header */
+                  padding: 20px 0;
+                  text-align: center;
+                  border-top-left-radius: 10px;
+                  border-top-right-radius: 10px;
+              }
+  
+              .header img {
+                  width: 150px;
+                  display: block;
+                  margin: 0 auto;
+              }
+  
+              /* Content Styles */
+              .content {
+                  background-color: #ffffff; /* White background */
+                  margin: 20px auto;
+                  padding: 40px;
+                  width: 80%;
+                  max-width: 600px;
+                  border-radius: 10px;
+                  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                  text-align: center;
+              }
+  
+              .content h1 {
+                  color: #222222; /* Dark grey */
+                  margin-bottom: 20px;
+              }
+  
+              .content p {
+                  font-size: 16px;
+                  line-height: 1.6;
+                  margin: 10px 0;
+                  color: #555555; /* Slightly lighter grey */
+              }
+  
+              /* Emphasized Text Styles */
+              .user-info {
+                  font-size: 20px;
+                  color: #007bff;
+                  font-weight: bold;
+                  margin: 20px 0;
+              }
+  
+              /* Login Details Section */
+              .login-details {
+                  text-align: left;
+                  margin-top: 30px;
+              }
+  
+              .details-row p {
+                  font-size: 16px;
+                  color: #333333;
+                  margin-bottom: 10px;
+              }
+  
+              /* Footer Styles */
+              .footer {
+                  margin-top: 40px;
+                  font-size: 14px;
+                  color: #777777;
+                  text-align: center;
+              }
+  
+              /* Link Styles */
+              a {
+                  color: #007bff;
+                  text-decoration: none;
+              }
+  
+              a:hover {
+                  text-decoration: underline;
+              }
+          </style>
+      </head>
+      <body>
+          <!-- Header with Logo -->
+          <div class="header">
+              <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
+          </div>
+  
+          <!-- Content Section -->
+          <div class="content">
+              <h1>User Login Notification</h1>
+              <p>We're verifying a recent sign-in for:</p>
+              <div class="user-info">
+                  <p>Email: ${user.email}</p>
+                  <p>Username: ${user.userName}</p>
+              </div>
+              
+              <div class="login-details">
+                  <div class="details-row">
+                      <p><strong>Date:</strong> ${timestamp}</p>
+                  </div>
+                  <div class="details-row">
+                      <p><strong>IP Address:</strong> ${ipAddress}</p>
+                  </div>
+                  <div class="details-row">
+                      <p><strong>User Agent:</strong> ${userAgent}</p>
+                  </div>
+              </div>
+  
+              <p>If you believe this sign-in is suspicious, please <a href="#">reset your password</a> immediately.</p>
+              <p>If you're aware of this sign-in, please disregard this notice. This can happen when using incognito mode or clearing cookies.</p>
+              <div class="footer">
+                  <p>Thanks,</p>
+                  <p>ASSET MOGUL PRO Exchange Team</p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `;
+  };
 
 
 
