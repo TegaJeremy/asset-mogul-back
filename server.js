@@ -17,6 +17,7 @@ const twoFactorAuthRoutes = require('./routers/2faRouter');
 const axios = require('axios')
 const cron = require('node-cron')
 
+
 // // Cron job to ping the website every 5 minutes and send an email
 // cron.schedule('*/5 * * * *', async () => {
 //     try {
@@ -58,13 +59,13 @@ const cron = require('node-cron')
 //     }
 // });
 
-// Cron job to ping the website twice every hour (at the start and at the 30-minute mark)
-cron.schedule('0,30 * * * *', async () => {
+// Cron job to ping the website three times a day (at 8 AM, 12 PM, and 4 PM)
+cron.schedule('0 8,12,16 * * *', async () => {
     try {
         await axios.get('https://asset-mogul-back.onrender.com');
         console.log('Pinged website to keep it awake');
 
-        // // Prepare and send the wake-up email
+        // Optionally, send the wake-up email
         // const subject = "Wake up website";
         // const html = wakeUpMail();
         // const regEmailData = {
@@ -77,6 +78,9 @@ cron.schedule('0,30 * * * *', async () => {
         console.error('Error in cron job:', error.message);
     }
 });
+
+
+
 
 
 
