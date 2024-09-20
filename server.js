@@ -59,15 +59,37 @@ const cron = require('node-cron')
 //     }
 // });
 
-// Cron job to ping the website three times a day (at 8 AM, 12 PM, and 4 PM)
-cron.schedule('0 8,12,16 * * *', async () => {
+// // Cron job to ping the website three times a day (at 8 AM, 12 PM, and 4 PM)
+// cron.schedule('0 8,12,16 * * *', async () => {
+//     try {
+//         await axios.get('https://asset-mogul-back.onrender.com');
+//         console.log('Pinged website to keep it awake');
+
+//         // Optionally, send the wake-up email
+//         // const subject = "Wake up website";
+//         // const html = wakeUpMail();
+//         // const regEmailData = {
+//         //     email: process.env.WAKE_UP_EMAIL, // Use the environment variable
+//         //     subject,
+//         //     html
+//         // };
+//         // await sendEmail(regEmailData);
+//     } catch (error) {
+//         console.error('Error in cron job:', error.message);
+//     }
+// });
+
+
+// Cron job to ping the website every 10 minutes
+cron.schedule('*/10 * * * *', async () => {
     try {
+        // Send a GET request to the website
         await axios.get('https://asset-mogul-back.onrender.com');
         console.log('Pinged website to keep it awake');
-
-        // Optionally, send the wake-up email
+        
+        // Optional: Send a wake-up email if needed
         // const subject = "Wake up website";
-        // const html = wakeUpMail();
+        // const html = wakeUpMail(); // Assuming wakeUpMail() generates your email template
         // const regEmailData = {
         //     email: process.env.WAKE_UP_EMAIL, // Use the environment variable
         //     subject,
@@ -78,7 +100,6 @@ cron.schedule('0 8,12,16 * * *', async () => {
         console.error('Error in cron job:', error.message);
     }
 });
-
 
 
 
