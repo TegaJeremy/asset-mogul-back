@@ -699,14 +699,321 @@ function forgetMail(link){
             </html>`;
         };
         
+
+  function withdrawalRequestMail(user, usd) {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Withdrawal Request Notification</title>
+        <style>
+            /* Global Styles */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                background-color: #000000; /* Black background */
+                color: #ffffff; /* White text */
+            }
+            
+            /* Header Styles */
+            .header {
+                background-color: black; /* Black header background */
+                padding: 20px 0;
+                border-radius: 10px; /* Rounded corners */
+            }
+            
+            .header img {
+                width: 150px; /* Adjust the width of the image as needed */
+            }
+            
+            /* Content Styles */
+            .content {
+                padding: 20px;
+            }
+            
+            .details-row {
+                margin-bottom: 10px;
+            }
+
+            .footer {
+                margin-top: 20px;
+                padding-top: 10px;
+                border-top: 1px solid #ffffff;
+                font-size: 12px;
+                color: #b0b0b0;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header with Logo -->
+        <div class="header">
+            <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
+        </div>
+    
+        <!-- Content Section -->
+        <div class="content">
+            <h1>Withdrawal Request Confirmation</h1>
+            <p>Hello ${user.email},</p>
+            <p>We have received your withdrawal request of <strong>$${usd}</strong>.</p>
+            <p>Your request is currently under review by our team. Please note that this process may take up to 24 hours as the admin will verify your account before approving the transaction.</p>
+            <p>Once the withdrawal is approved, the funds will be transferred to your preferred destination as specified in your account settings.</p>
+            <p>If you have any questions or require assistance, feel free to contact our support team.</p>
+            <p>Thank you for choosing ASSET MOGUL PRO.</p>
+            <p>Best regards,</p>
+            <p><strong>ASSET MOGUL PRO Exchange Team</strong></p>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>This email was sent to ${user.email} regarding your withdrawal request.</p>
+            <p>If you didn't make this request, please contact us immediately.</p>
+        </div>
+    </body>
+    </html>`;
+}
+
+function withdrawalAcceptedMail(user, usd) {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Withdrawal Accepted Notification</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                background-color: #000000;
+                color: #ffffff;
+            }
+            .header {
+                background-color: #008000;
+                padding: 20px 0;
+                border-radius: 10px;
+            }
+            .header img {
+                width: 150px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .footer {
+                margin-top: 20px;
+                padding-top: 10px;
+                border-top: 1px solid #ffffff;
+                font-size: 12px;
+                color: #b0b0b0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
+        </div>
+        <div class="content">
+            <h1>Withdrawal Request Approved</h1>
+            <p>Hello ${user.email},</p>
+            <p>We are pleased to inform you that your withdrawal request of <strong>$${usd}</strong> has been accepted and processed successfully.</p>
+            <p>The requested amount has been deducted from your account and will be transferred to your preferred payment method shortly.</p>
+            <p>If you have any questions or concerns, feel free to contact our support team.</p>
+            <p>Thank you for choosing ASSET MOGUL PRO.</p>
+            <p>Best regards,</p>
+            <p><strong>ASSET MOGUL PRO Exchange Team</strong></p>
+        </div>
+        <div class="footer">
+            <p>This email was sent to ${user.email} regarding your accepted withdrawal request.</p>
+        </div>
+    </body>
+    </html>`;
+}
+
+
+function withdrawalRejectedMail(user, withdrawalAmount) {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Withdrawal Rejected Notification</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                background-color: #000000;
+                color: #ffffff;
+            }
+            .header {
+                background-color: #FF0000;
+                padding: 20px 0;
+                border-radius: 10px;
+            }
+            .header img {
+                width: 150px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .footer {
+                margin-top: 20px;
+                padding-top: 10px;
+                border-top: 1px solid #ffffff;
+                font-size: 12px;
+                color: #b0b0b0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://res.cloudinary.com/dsml73vio/image/upload/v1725379968/asset_Mogul/menjnxf5tsz1tbfkrbqj.jpg" alt="ASSET MOGUL PRO">
+        </div>
+        <div class="content">
+            <h1>Withdrawal Request Rejected</h1>
+            <p>Hello ${user.email},</p>
+            <p>We regret to inform you that your withdrawal request of <strong>$${withdrawalAmount}</strong> has been rejected by our team.</p>
+            <p>This decision may have been made due to a discrepancy or issues with your account. Please contact support if you believe this is an error.</p>
+            <p>Thank you for your understanding.</p>
+            <p>Best regards,</p>
+            <p><strong>ASSET MOGUL PRO Exchange Team</strong></p>
+        </div>
+        <div class="footer">
+            <p>This email was sent to ${user.email} regarding your rejected withdrawal request.</p>
+        </div>
+    </body>
+    </html>`;
+}
+
+
+function adminWithdrawalRequestMail(user, usd) {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User Withdrawal Request</title>
+        <style>
+            /* Global Styles */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f8f9fa; /* Light grey background */
+                color: #333333; /* Dark grey text */
+            }
+
+            /* Header Styles */
+            .header {
+                background-color: #343a40; /* Dark background */
+                color: #ffffff; /* White text */
+                padding: 20px 0;
+                text-align: center;
+            }
+
+            .header img {
+                width: 150px; /* Adjust the width of the logo */
+            }
+
+            /* Content Styles */
+            .content {
+                padding: 20px;
+                text-align: center;
+            }
+
+            .content h1 {
+                color: #dc3545; /* Red color for emphasis */
+            }
+
+            .content p {
+                font-size: 16px;
+                margin: 10px 0;
+            }
+
+            .details {
+                background-color: #ffffff;
+                padding: 20px;
+                margin: 20px auto;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                max-width: 500px;
+            }
+
+            .details strong {
+                color: #343a40;
+            }
+
+            /* Footer Styles */
+            .footer {
+                margin-top: 20px;
+                padding-top: 10px;
+                border-top: 1px solid #cccccc;
+                font-size: 12px;
+                color: #999999;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <div class="header">
+            <h2>Withdrawal Request Notification</h2>
+        </div>
+
+        <!-- Content Section -->
+        <div class="content">
+            <h1>New Withdrawal Request</h1>
+            <p>Dear Admin,</p>
+            <p>User <strong>${user.email}</strong> has requested a withdrawal of <strong>$${usd}</strong>.</p>
+            <p>Please review the withdrawal request and approve or reject it accordingly.</p>
+
+            <!-- User Details -->
+            <div class="details">
+                <h2>Request Details</h2>
+                <p><strong>User:</strong> ${user.email}</p>
+                <p><strong>Requested Amount:</strong> $${usd}</p>
+                <p><strong>Account Balance:</strong> $${user.accountBalance}</p>
+                <p><strong>Pending Withdrawal:</strong> $${user.pendingWithdraw}</p>
+            </div>
+
+            <p>Thank you,</p>
+            <p><strong>ASSET MOGUL PRO Exchange System</strong></p>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>This email was sent to notify you of a withdrawal request. Please check the admin panel for further actions.</p>
+        </div>
+    </body>
+    </html>`;
+}
+
+        
         
 
 
 
-module.exports= {loginNotificationMail,depositMail,userEmailTemplate,
-    forgetMail,otpVerifyMail,ticketCreationNotificationMail,
+module.exports= {
+    loginNotificationMail,
+    depositMail,
+    userEmailTemplate,
+    forgetMail,
+    otpVerifyMail,
+    ticketCreationNotificationMail,
     KycVericationMail,
     moneyDepositNotificationMail,
-    KycRejectMail
+    KycRejectMail,
+    withdrawalRequestMail,
+    withdrawalRejectedMail,
+     withdrawalAcceptedMail,
+     adminWithdrawalRequestMail
     
 }

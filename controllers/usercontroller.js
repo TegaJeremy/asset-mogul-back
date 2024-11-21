@@ -477,6 +477,10 @@ const assignMoneyToUser = async (req, res) => {
  
          // Update user statusBar
          user.statusBar = newStatusBar;
+          // Deduct the assigned amount from PendingDeposit, ensuring it doesn't go negative
+       if (user.pendingDeposit > 0) {
+        user.PendingDeposit = Math.max(0, user.PendingDeposit - amountToAssign);
+    }
 
         await user.save();
 
@@ -780,6 +784,89 @@ const getUserStatusBar = async (req, res) => {
     }
 };
 
+const updateUsersWithNewFields = async (req, res) => {
+    try {
+      // Perform the update operation
+      const result = await userModel.updateMany(
+        {}, // Match all user documents
+        {
+          $set: {
+            lastWithdraw: 0,
+            pendingWithdraw: 0,
+            rejectedWithdraw: 0,
+            lastIntrest: 0,
+            runningIntrest: 0,
+            completedIntrest: 0,
+            lastDeposit: 0,
+            PendingDeposit: 0,
+            RejectedDeposite: 0,
+          },
+        }
+      );
+  
+      // Log the result to check the number of matched and modified documents
+      console.log('Update result:', result);
+  
+      res.status(200).json({
+        message: 'Users updated successfully',
+        matchedCount: result.matchedCount,
+        modifiedCount: result.modifiedCount,
+      });
+    } catch (err) {
+      console.error('Error while updating users:', err);
+      res.status(500).json({
+        message: 'An error occurred while updating users',
+        error: err.message,
+      });
+    }
+  };
+  
+
+  const getPendingwithdrawl = async (req,res)=>{
+    try {
+        const {userId} = req.params
+        const user = await userModel.findOne({_id:userId})
+        if(!user){
+            return res.status(400).json({message:'user not found'})
+        }
+        const PendingWithdraw = user.pendingWithdraw
+        res.status(200).json({message:'user pending withdrawl', PendingWithdraw})
+        
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+const getRejectedWithdral = async (req,res)=>{
+    try {
+        const {userId} = req.params
+        const user = await userModel.findOne({_id:userId})
+        if(!user){
+            return res.status(400).json({message:'user not found'})
+        }
+        const rejectedWithdraw= user.rejectedWithdraw
+        res.status(200).json({message:'user pending withdrawl', rejectedWithdraw})
+        
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+const getPendingDeposit = async (req,res)=>{
+    try {
+        const {userId} = req.params
+        const user = await userModel.findOne({_id:userId})
+        if(!user){
+            return res.status(400).json({message:'user not found'})
+        }
+        const pendingDeposit= user.PendingDeposit
+        res.status(200).json({message:'user pending deposit', pendingDeposit})
+        
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+ 
  
 
 module.exports={
@@ -801,7 +888,11 @@ module.exports={
     getUserTotalBalance,
     welcome,
     getAllUserCount,
-    getUserStatusBar
+    getUserStatusBar,
+    updateUsersWithNewFields,
+    getPendingwithdrawl,
+    getPendingDeposit,
+    getRejectedWithdral
     
 }
 

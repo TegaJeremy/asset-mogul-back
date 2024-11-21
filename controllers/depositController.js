@@ -115,23 +115,23 @@ const depositHistory = async (req, res) => {
     }
 };
 
-const getTotalDeposit = async (req,res) => {
-    try {
-        const {userId} = req.params
-        // Find all deposit records for the user
-        const deposits = await depositModel.find({ userId });
+// const getTotalDeposit = async (req,res) => {
+//     try {
+//         const {userId} = req.params
+//         // Find all deposit records for the user
+//         const deposits = await depositModel.find({ userId });
 
-        // Calculate total deposit amount
-        let totalDeposit = 0;
-        deposits.forEach(deposit => {
-            totalDeposit += parseFloat(deposit.amount);
-        });
+//         // Calculate total deposit amount
+//         let totalDeposit = 0;
+//         deposits.forEach(deposit => {
+//             totalDeposit += parseFloat(deposit.amount);
+//         });
 
-       res.status(200).json({message:'total deposited amount:',totalDeposit})
-    } catch (error) {
-        throw new Error("Error calculating total deposit");
-    }
-};
+//        res.status(200).json({message:'total deposited amount:',totalDeposit})
+//     } catch (error) {
+//         throw new Error("Error calculating total deposit");
+//     }
+// };
 
 
 const getTotalDepositsForAllUsr = async (req, res) => {
@@ -157,6 +157,45 @@ const getTotalDepositsForAllUsr = async (req, res) => {
 };
 
 
+const getTotalDeposit = async (req,res) => {
+    try {
+        const {userId} = req.params
+        // Find all deposit records for the user
+        const deposits = await depositModel.find({ userId });
+
+        // Calculate total deposit amount
+        let totalDeposit = 0;
+        deposits.forEach(deposit => {
+            totalDeposit += parseFloat(deposit.amount);
+        });
+
+       res.status(200).json({message:'total deposited amount:',totalDeposit})
+    } catch (error) {
+        throw new Error("Error calculating total deposit");
+    }
+};
+
+
+const getLastDeposit = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Find the latest deposit record for the user, sorted by creation date (most recent first)
+        const latestDeposit = await depositModel.findOne({ userId }).sort({ createdAt: -1 });
+
+        // If no deposit is found, return 0 as the amount
+        const amount = latestDeposit ? latestDeposit.amount : 0;
+
+        // Return the amount (0 if no deposit was found)
+        res.status(200).json({ amount });
+    } catch (error) {
+        console.error('Error retrieving latest deposit:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
 
 
 
@@ -168,5 +207,6 @@ module.exports = {
     deposit,
     depositHistory,
     getTotalDeposit,
-    getTotalDepositsForAllUsr
+    getTotalDepositsForAllUsr,
+    getLastDeposit
 }
