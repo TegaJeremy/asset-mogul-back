@@ -179,25 +179,61 @@ const getTotalDeposit = async (req,res) => {
 };
 
 
+// const getLastDeposit = async (req, res) => {
+//     try {
+//         const { userId } = req.params;
+
+//         // Find the latest deposit record for the user, sorted by creation date (most recent first)
+//         const latestDeposit = await depositModel.findOne({ userId }).sort({ createdAt: -1 });
+
+//         // If no deposit is found, return 0 as the amount
+//         const amount = latestDeposit ? latestDeposit.amount : 0;
+
+//         // Return the amount (0 if no deposit was found)
+//         res.status(200).json({ amount });
+//     } catch (error) {
+//         console.error('Error retrieving latest deposit:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// };
+
+
+
 const getLastDeposit = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        // Find the latest deposit record for the user, sorted by creation date (most recent first)
-        const latestDeposit = await depositModel.findOne({ userId }).sort({ createdAt: -1 });
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
 
-        // If no deposit is found, return 0 as the amount
-        const amount = latestDeposit ? latestDeposit.amount : 0;
+        // Log the sorting field for debugging
+        console.log('Sorting deposits by createdAt and _id for user:', userId);
 
-        // Return the amount (0 if no deposit was found)
-        res.status(200).json({ amount });
+        // Fetch the latest deposit, sorting by createdAt and _id as a fallback
+        const latestDeposit = await depositModel
+            .findOne({ userId })
+            .sort({ createdAt: -1, _id: -1 }) // Sort by creation date, then by ID
+            .lean();
+
+        if (!latestDeposit) {
+            return res.status(200).json({
+                message: 'No deposits found for this user',
+                amount: 0,
+            });
+        }
+
+        // Respond with the latest deposit details
+        res.status(200).json({
+            
+            amount: latestDeposit.amount,
+            
+        });
     } catch (error) {
         console.error('Error retrieving latest deposit:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-
 
 
 
