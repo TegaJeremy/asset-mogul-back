@@ -78,6 +78,9 @@ const deposit = async (req, res) => {
         });
      
         await depositTransaction.save();
+         // Update PendingDeposit, converting amount to a number
+         user.pendingDeposit += Number(amount); // Convert amount to number before adding
+         await user.save();
       
         
    // sending an email to the user that the upload has been confirmed

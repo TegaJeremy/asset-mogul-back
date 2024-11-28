@@ -479,7 +479,7 @@ const assignMoneyToUser = async (req, res) => {
          user.statusBar = newStatusBar;
           // Deduct the assigned amount from PendingDeposit, ensuring it doesn't go negative
        if (user.pendingDeposit > 0) {
-        user.PendingDeposit = Math.max(0, user.PendingDeposit - amountToAssign);
+        user.pendingDeposit = Math.max(0, user.pendingDeposit - amountToAssign);
     }
 
         await user.save();
