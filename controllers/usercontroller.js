@@ -859,7 +859,7 @@ const getPendingDeposit = async (req,res)=>{
         if(!user){
             return res.status(400).json({message:'user not found'})
         }
-        const pendingDeposit= user.PendingDeposit
+        const pendingDeposit= user.pendingDeposit
         res.status(200).json({message:'user pending deposit', pendingDeposit})
         
     } catch (error) {
