@@ -438,76 +438,73 @@ const ViewProfile = async (req,res)=>{
         res.status(500).json(error.message)
     }
 }
-
 const assignMoneyToUser = async (req, res) => {
     try {
+        console.log('Request body:', req.body); // Log the request body
+
         const { identifier, amount } = req.body;
 
         let user;
-
-        // Check if identifier is provided and is a valid ObjectId
         if (identifier && mongoose.isValidObjectId(identifier)) {
+            console.log('Identifier is a valid ObjectId');
             user = await userModel.findById(identifier);
         } else if (identifier && identifier.includes('@')) {
-            // If identifier contains '@', assume it is an email
-            let lowerCaseIdentifier = identifier.toLowerCase()
-            // console.log(lowerCaseIdentifier)
+            console.log('Identifier is an email');
+            const lowerCaseIdentifier = identifier.toLowerCase();
             user = await userModel.findOne({ email: lowerCaseIdentifier });
         } else {
+            console.log('Invalid identifier');
             return res.status(400).json({ message: 'Please provide a valid user ID or email' });
         }
 
         if (!user) {
+            console.log('User not found');
             return res.status(400).json({ message: 'User not found' });
         }
 
-        // Validate the amount
+        console.log('User found:', user);
+
         if (isNaN(amount) || !amount || parseFloat(amount) === 0) {
+            console.log('Invalid amount:', amount);
             return res.status(400).json({ message: 'Invalid amount. Amount must be provided and greater than 0' });
         }
 
-        // Assign money to user
+        console.log('Amount is valid:', amount);
+
+        // Update user fields
         user.depositWallet += parseFloat(amount);
         user.accountBalance += parseFloat(amount);
-         // Increase statusBar by 2, ensuring it doesn’t exceed 100
-         let newStatusBar = user.statusBar + 2;
-         if (newStatusBar > 100) {
-             newStatusBar = 2;
-         }
- 
-         // Update user statusBar
-         user.statusBar = newStatusBar;
-          // Deduct the assigned amount from PendingDeposit, ensuring it doesn't go negative
-       if (user.pendingDeposit > 0) {
-        user.pendingDeposit = Math.max(0, user.pendingDeposit - amountToAssign);
-    }
+
+        let newStatusBar = user.statusBar + 2;
+        if (newStatusBar > 100) {
+            newStatusBar = 2;
+        }
+        user.statusBar = newStatusBar;
+
+        if (user.pendingDeposit > 0) {
+            user.pendingDeposit = Math.max(0, user.pendingDeposit - parseFloat(amount));
+        }
 
         await user.save();
+        console.log('User updated successfully:', user);
 
-
-
-
-    
-        
-
-       
-        
-
+        // Prepare email
         const html = moneyDepositNotificationMail(user, amount);
         const emailData = {
             subject: "Money Deposit Notification",
             html
         };
 
-        // Send email notification to user
+        console.log('Sending email to:', user.email);
         await sendEmail({ email: user.email, ...emailData });
+        console.log('Email sent successfully');
+
         res.status(200).json({ message: 'Money assigned to user successfully', user });
     } catch (error) {
         console.error('Error assigning money to user:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 
 
 const assignProfitToUser = async (req, res) => {
