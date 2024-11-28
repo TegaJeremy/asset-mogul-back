@@ -776,7 +776,7 @@ function forgetMail(link){
     </html>`;
 }
 
-function withdrawalAcceptedMail(user, usd) {
+function withdrawalAcceptedMail(user, withdrawalAmount) {
     return `
     <!DOCTYPE html>
     <html lang="en">
@@ -820,7 +820,7 @@ function withdrawalAcceptedMail(user, usd) {
         <div class="content">
             <h1>Withdrawal Request Approved</h1>
             <p>Hello ${user.email},</p>
-            <p>We are pleased to inform you that your withdrawal request of <strong>$${usd}</strong> has been accepted and processed successfully.</p>
+            <p>We are pleased to inform you that your withdrawal request of <strong>$${withdrawalAmount}</strong> has been accepted and processed successfully.</p>
             <p>The requested amount has been deducted from your account and will be transferred to your preferred payment method shortly.</p>
             <p>If you have any questions or concerns, feel free to contact our support team.</p>
             <p>Thank you for choosing ASSET MOGUL PRO.</p>

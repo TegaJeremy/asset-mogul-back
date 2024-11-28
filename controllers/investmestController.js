@@ -1188,79 +1188,94 @@ const acceptWithdrawal = async (req, res) => {
     try {
         const { userId } = req.body;
 
-      // Check if userId is a valid ObjectId
-      if (!mongoose.isValidObjectId(userId)) {
-          return res.status(400).json({ message: 'Invalid user ID, please pass the correct user ID' });
-      }
+        // Validate userId
+        if (!mongoose.isValidObjectId(userId)) {
+            return res.status(400).json({ message: 'Invalid user ID, please pass the correct user ID' });
+        }
 
         // Find the user
-        const user = await userModel.findOne({ _id: userId })
-
+        const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if there is a pending withdrawal
+        // Check for pending withdrawal
         if (!user.pendingWithdraw || user.pendingWithdraw === 0) {
             return res.status(400).json({ message: 'No pending withdrawal request' });
         }
 
         const withdrawalAmount = user.pendingWithdraw;
 
-        // Deduct the withdrawal amount from the user's account balance
+        // Ensure sufficient balance
+        if (user.accountBalance < withdrawalAmount) {
+            return res.status(400).json({ message: 'Insufficient account balance for withdrawal' });
+        }
+
+        // Deduct withdrawal amount and update user fields
         user.accountBalance -= withdrawalAmount;
-        user.pendingWithdraw = 0; // Clear the pending withdrawal
-        user.pendingDeposit += Number(amount); // Convert amount to number before adding
-       
-        // Save the updated user object
+        user.pendingWithdraw = 0;
+        user.pendingDeposit += withdrawalAmount;
+
         await user.save();
 
-        // Generate a random withdrawal number
-        function generateRandomNumbers() {
+        // Generate withdrawal ID
+        const generateRandomNumbers = () => {
             const randomNumbers = [];
             for (let i = 0; i < 6; i++) {
                 randomNumbers.push(Math.floor(Math.random() * 10));
             }
-            return `#${randomNumbers.join('')}`; 
-        }
+            return `#${randomNumbers.join('')}`;
+        };
 
-        // Create a withdrawal record
+        // Create withdrawal record
         const withdrawalRecord = new withdrawalModel({
-            userId: userId,
+            userId,
             amount: withdrawalAmount,
             withdrawId: generateRandomNumbers(),
-            timestamp: Date.now()
         });
-
-        // Save the withdrawal record
         await withdrawalRecord.save();
 
-        // Create a transaction record
-        const depositTransaction = new transationModel({
+        // Create transaction record
+        const transactionRecord = new transactionModel({
             type: 'withdrawal',
-            amount: withdrawalRecord.amount,
-            userId: userId,
-            ID: withdrawalRecord.withdrawId
+            amount: withdrawalAmount,
+            userId,
+            ID: withdrawalRecord.withdrawId,
         });
-        await depositTransaction.save();
+        await transactionRecord.save();
 
-        const usd = withdrawalRecord.amount
-        
-         // Prepare and send rejection email
-         const html = withdrawalAcceptedMail(user, usd);
-         const notifyUserMail = {
-             email: user.email,
-             subject: "Accept withdrawal",
-             html
-         };
-         await sendEmail(notifyUserMail);
+        // Send email notification
+        let html;
+        try {
+            html = withdrawalAcceptedMail(user, withdrawalAmount);
+        } catch (err) {
+            console.error('Error generating withdrawal acceptance email:', err);
+            return res.status(500).json({ message: 'Error generating withdrawal acceptance email' });
+        }
 
-        res.status(200).json({ message: 'Withdrawal accepted and processed', remainingBalance: user.accountBalance });
+        const notifyUserMail = {
+            email: user.email,
+            subject: 'Withdrawal Accepted',
+            html,
+        };
+
+        try {
+            await sendEmail(notifyUserMail);
+        } catch (err) {
+            console.error('Error sending email to user:', err);
+            return res.status(500).json({ message: 'Error sending notification email' });
+        }
+
+        res.status(200).json({
+            message: 'Withdrawal accepted and processed',
+            remainingBalance: user.accountBalance,
+        });
     } catch (error) {
         console.error('Error accepting withdrawal request:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 const rejectWithdrawal = async (req, res) => {
