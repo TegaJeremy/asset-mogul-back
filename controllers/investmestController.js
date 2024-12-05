@@ -953,7 +953,9 @@ const generateRandomCode = () => {
     return Math.floor(1000 + Math.random() * 9000); 
   };
 
-const withdrawMoney = async (req, res) => {
+
+
+  const withdrawMoney = async (req, res) => {
     try {
       const { userId } = req.params;
       const { amount, method, walletName, walletAddress, bankName, accountNumber, accountHolderName, swiftCode, routingNumber } = req.body;
@@ -974,12 +976,12 @@ const withdrawMoney = async (req, res) => {
       // Validate required fields based on the method
       if (method === 'crypto') {
         if (!walletName || !walletAddress) {
-          return res.status(400).json({ message: 'Please provide walletName, walletAddress, and amount for crypto withdrawal.' });
+          return res.status(400).json({ message: 'Please provide walletName and walletAddress for crypto withdrawal.' });
         }
       } else if (method === 'bank') {
         if (!bankName || !accountNumber || !accountHolderName || !swiftCode || !routingNumber) {
           return res.status(400).json({
-            message: 'Please provide bankName, accountNumber, accountHolderName, swiftCode, routingNumber, and amount for bank withdrawal.',
+            message: 'Please provide bankName, accountNumber, accountHolderName, swiftCode, and routingNumber for bank withdrawal.',
           });
         }
       }
@@ -991,7 +993,7 @@ const withdrawMoney = async (req, res) => {
       }
   
       // Check if the user has completed KYC
-      if (!user.kyc.verified) {
+      if (!user.kyc?.verified) {
         return res.status(400).json({ message: 'KYC verification required for withdrawal' });
       }
   
@@ -999,16 +1001,16 @@ const withdrawMoney = async (req, res) => {
       if (withdrawalAmount > user.accountBalance) {
         return res.status(400).json({ message: 'Insufficient balance for withdrawal' });
       }
-
+  
+      // Generate a unique withdrawal ID
       const withdrawId = generateRandomCode();
   
       // Prepare withdrawal details based on the method
       const withdrawalData = {
         userId,
         amount: withdrawalAmount,
-        method,
-        withdrawId 
-
+        method, // Specify the method
+        withdrawId,
       };
   
       if (method === 'crypto') {
@@ -1057,12 +1059,13 @@ const withdrawMoney = async (req, res) => {
         })
       );
   
-      res.status(200).json({ pendingWithdraw: user.pendingWithdraw });
+      res.status(200).json({ pendingWithdraw: user.pendingWithdraw, withdrawalData, user });
     } catch (error) {
       console.error('Error submitting withdrawal request:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   };
+  
 
 
 const withdrawalHistory = async (req, res) => {
@@ -1188,93 +1191,104 @@ const acceptWithdrawal = async (req, res) => {
     try {
         const { userId } = req.body;
 
+        console.log('Request received. userId:', userId);
+
         // Validate userId
         if (!mongoose.isValidObjectId(userId)) {
+            console.log('Invalid user ID:', userId);
             return res.status(400).json({ message: 'Invalid user ID, please pass the correct user ID' });
         }
 
         // Find the user
         const user = await userModel.findById(userId);
+        console.log('User found:', user);
         if (!user) {
+            console.log('User not found:', userId);
             return res.status(404).json({ message: 'User not found' });
         }
 
         // Check for pending withdrawal
+        console.log('Checking pending withdrawal for user:', user);
         if (!user.pendingWithdraw || user.pendingWithdraw === 0) {
+            console.log('No pending withdrawal request for user:', userId);
             return res.status(400).json({ message: 'No pending withdrawal request' });
         }
 
         const withdrawalAmount = user.pendingWithdraw;
+        console.log('Withdrawal amount:', withdrawalAmount);
 
         // Ensure sufficient balance
         if (user.accountBalance < withdrawalAmount) {
+            console.log(
+                'Insufficient balance for withdrawal. Balance:',
+                user.accountBalance,
+                'Withdrawal amount:',
+                withdrawalAmount
+            );
             return res.status(400).json({ message: 'Insufficient account balance for withdrawal' });
         }
 
+        // Fetch withdrawal record to determine method
+        console.log('Fetching withdrawal record...');
+        const withdrawalRecord = await withdrawalModel.findOne({ userId, amount: withdrawalAmount });
+        if (!withdrawalRecord) {
+            console.log('No withdrawal record found for user:', userId);
+            return res.status(400).json({ message: 'No withdrawal record found' });
+        }
+
+        const withdrawalMethod = withdrawalRecord.method;
+        console.log('Withdrawal method:', withdrawalMethod);
+
         // Deduct withdrawal amount and update user fields
+        console.log('Updating user balances...');
         user.accountBalance -= withdrawalAmount;
         user.pendingWithdraw = 0;
         user.pendingDeposit += withdrawalAmount;
 
         await user.save();
+        console.log('User updated successfully:', user);
 
-        // Generate withdrawal ID
-        const generateRandomNumbers = () => {
-            const randomNumbers = [];
-            for (let i = 0; i < 6; i++) {
-                randomNumbers.push(Math.floor(Math.random() * 10));
-            }
-            return `#${randomNumbers.join('')}`;
-        };
-
-        // Create withdrawal record
-        const withdrawalRecord = new withdrawalModel({
-            userId,
-            amount: withdrawalAmount,
-            withdrawId: generateRandomNumbers(),
-        });
+        // Generate withdrawal ID if not already generated
+        console.log('Checking withdrawal ID...');
+        const withdrawalId = withdrawalRecord.withdrawId || `#${Math.floor(100000 + Math.random() * 900000)}`;
+        withdrawalRecord.withdrawId = withdrawalId;
         await withdrawalRecord.save();
+        console.log('Updated withdrawal record with ID:', withdrawalId);
 
         // Create transaction record
-        const transactionRecord = new transactionModel({
+        console.log('Creating transaction record...');
+        const transactionRecord = new transationModel({
             type: 'withdrawal',
             amount: withdrawalAmount,
             userId,
-            ID: withdrawalRecord.withdrawId,
+            ID: withdrawalId,
         });
         await transactionRecord.save();
+        console.log('Transaction record saved:', transactionRecord);
 
-        // Send email notification
-        let html;
-        try {
-            html = withdrawalAcceptedMail(user, withdrawalAmount);
-        } catch (err) {
-            console.error('Error generating withdrawal acceptance email:', err);
-            return res.status(500).json({ message: 'Error generating withdrawal acceptance email' });
-        }
-
+        // Prepare and send email
+        console.log('Preparing withdrawal email...');
+        const html = withdrawalAcceptedMail(user, withdrawalAmount);
         const notifyUserMail = {
             email: user.email,
             subject: 'Withdrawal Accepted',
             html,
         };
 
-        try {
-            await sendEmail(notifyUserMail);
-        } catch (err) {
-            console.error('Error sending email to user:', err);
-            return res.status(500).json({ message: 'Error sending notification email' });
-        }
+        console.log('Sending email to user:', user.email);
+        await sendEmail(notifyUserMail);
+        console.log('Email sent successfully.');
 
         res.status(200).json({
             message: 'Withdrawal accepted and processed',
             remainingBalance: user.accountBalance,
         });
     } catch (error) {
-        console.error('Error accepting withdrawal request:', error);
+        console.error('Error accepting withdrawal request:', error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 
