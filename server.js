@@ -85,7 +85,7 @@ const cron = require('node-cron')
 cron.schedule('*/10 * * * *', async () => {
     try {
         // Send a GET request to the website
-        await axios.get('https://asset-mogul-back.onrender.com');
+        await axios.get('https://coinbasebackend.onrender.com');
         console.log('Pinged website to keep it awake');
         
         // Optional: Send a wake-up email if needed
