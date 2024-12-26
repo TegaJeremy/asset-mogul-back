@@ -114,6 +114,22 @@ app.use(compression()); // Enable gzip compression
 app.use(morgan('combined')); // Enable request logging
 app.use(helmet()); // Set various HTTP headers for security
 app.use(cors({origin:"*"}));
+
+const allowedOrigins = ['http://localhost:5173'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // If you need cookies or other credentials
+};
+
+app.use(cors(corsOptions));
 app.use(fileUploader({
     useTempFiles: true,
 }))
